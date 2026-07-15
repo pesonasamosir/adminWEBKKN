@@ -38,14 +38,14 @@ export function BeritaFormPage() {
       const slug = form.judul.toLowerCase().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-").slice(0, 50);
       setBerita([...berita, { id: newId, slug: `${slug}-${newId}`, ...form } as Berita]);
     }
-    navigate("/admin/berita");
+    navigate("/berita");
   };
 
   return (
     <div className="space-y-5 max-w-4xl">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Link to="/admin/berita">
+          <Link to="/berita">
             <button className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-600"><ChevronLeft size={18} /></button>
           </Link>
           <div>

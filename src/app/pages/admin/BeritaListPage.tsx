@@ -29,7 +29,7 @@ export function BeritaListPage() {
           <h1 className="text-gray-800">Daftar Berita</h1>
           <p className="text-gray-500 text-sm mt-0.5">{berita.length} total berita</p>
         </div>
-        <Link to="/admin/berita/create">
+        <Link to="/berita/create">
           <Button style={{ backgroundColor: "#1A56A0" }} className="text-white gap-2">
             <Plus size={16} /> Tambah Berita
           </Button>
@@ -93,10 +93,7 @@ export function BeritaListPage() {
                   <td className="px-4 py-3 text-xs text-gray-500">{new Date(b.tanggal).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" })}</td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-1">
-                      <a href={`/berita/${b.slug}`} target="_blank" rel="noopener noreferrer">
-                        <button className="p-1.5 rounded-lg hover:bg-blue-50 text-gray-400 hover:text-blue-600 transition-colors"><Eye size={14} /></button>
-                      </a>
-                      <Link to={`/admin/berita/${b.id}/edit`}>
+                      <Link to={`/berita/${b.id}/edit`}>
                         <button className="p-1.5 rounded-lg hover:bg-green-50 text-gray-400 hover:text-green-600 transition-colors"><Edit size={14} /></button>
                       </Link>
                       <button onClick={() => setDeleteId(b.id)} className="p-1.5 rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-600 transition-colors">

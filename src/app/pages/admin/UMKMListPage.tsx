@@ -18,7 +18,7 @@ export function UMKMListPage() {
     <div className="space-y-5">
       <div className="flex items-center justify-between">
         <div><h1 className="text-gray-800">Daftar UMKM</h1><p className="text-gray-500 text-sm">{umkm.length} total UMKM</p></div>
-        <Link to="/admin/umkm/create">
+        <Link to="/umkm/create">
           <Button style={{ backgroundColor: "#E67E22" }} className="text-white gap-2"><Plus size={16} /> Tambah UMKM</Button>
         </Link>
       </div>
@@ -64,7 +64,7 @@ export function UMKMListPage() {
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex gap-1">
-                      <Link to={`/admin/umkm/${u.id}/edit`}><button className="p-1.5 rounded-lg hover:bg-green-50 text-gray-400 hover:text-green-600"><Edit size={14} /></button></Link>
+                      <Link to={`/umkm/${u.id}/edit`}><button className="p-1.5 rounded-lg hover:bg-green-50 text-gray-400 hover:text-green-600"><Edit size={14} /></button></Link>
                       <button onClick={() => setDeleteId(u.id)} className="p-1.5 rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-600"><Trash2 size={14} /></button>
                     </div>
                   </td>

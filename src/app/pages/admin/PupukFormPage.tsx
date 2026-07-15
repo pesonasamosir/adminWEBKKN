@@ -39,14 +39,14 @@ export function PupukFormPage() {
       const newId = Math.max(...pupuk.map(p => p.id), 0) + 1;
       setPupuk([...pupuk, { id: newId, ...form }]);
     }
-    navigate("/admin/pupuk");
+    navigate("/pupuk");
   };
 
   return (
     <div className="space-y-5 max-w-4xl">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Link to="/admin/pupuk"><button className="p-1.5 rounded-lg hover:bg-gray-100"><ChevronLeft size={18} /></button></Link>
+          <Link to="/pupuk"><button className="p-1.5 rounded-lg hover:bg-gray-100"><ChevronLeft size={18} /></button></Link>
           <h1 className="text-gray-800">{isEdit ? "Edit Pupuk" : "Tambah Pupuk"}</h1>
         </div>
         <Button onClick={handleSave} style={{ backgroundColor: "#2E8B57" }} className="text-white gap-2"><Save size={14} /> Simpan</Button>

@@ -7,35 +7,7 @@ const NAVY = "#1B3A6B";
 export function DashboardPage() {
   const { desa, wisata, umkm, berita, events, pupuk, galeri, pesan, currentUser } = useApp();
 
-  const stats = [
-    {
-      label: "Total Pengunjung Bulan Ini",
-      value: "12,450",
-      delta: "+15%",
-      icon: Users,
-      color: NAVY,
-      bg: "#EFF6FF",
-      positive: true,
-    },
-    {
-      label: "UMKM Aktif Terdaftar",
-      value: umkm.filter((u) => u.aktif).length,
-      delta: `+${umkm.filter((u) => u.aktif).length - 80}`,
-      icon: Store,
-      color: "#059669",
-      bg: "#ECFDF5",
-      positive: true,
-    },
-    {
-      label: "Estimasi Perputaran Ekonomi",
-      value: "Rp 45.2M",
-      delta: "— Stabil",
-      icon: TrendingUp,
-      color: "#D97706",
-      bg: "#FFFBEB",
-      positive: null,
-    },
-  ];
+  
 
   const latestBerita = berita.filter((b) => b.status === "published").slice(0, 3);
   const upcomingEvents = events.filter((e) => e.aktif).slice(0, 3);
@@ -55,13 +27,13 @@ export function DashboardPage() {
         </div>
         <div className="flex items-center gap-2 shrink-0">
           <Link
-            to="/admin/wisata/create"
+            to="/wisata/create"
             className="flex items-center gap-1.5 px-4 py-2 rounded-lg border text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors border-gray-200"
           >
             <MapPin size={14} style={{ color: NAVY }} /> Tambah Wisata
           </Link>
           <Link
-            to="/admin/berita/create"
+            to="/berita/create"
             className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-white text-sm font-medium hover:opacity-90 transition-opacity"
             style={{ backgroundColor: NAVY }}
           >
@@ -70,39 +42,12 @@ export function DashboardPage() {
         </div>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        {stats.map((s, i) => (
-          <div key={i} className="bg-white rounded-xl p-5 border border-gray-100 shadow-sm">
-            <div className="flex items-start justify-between">
-              <div
-                className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
-                style={{ backgroundColor: s.bg }}
-              >
-                <s.icon size={18} style={{ color: s.color }} />
-              </div>
-              <span
-                className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
-                  s.positive === true
-                    ? "bg-green-50 text-green-700"
-                    : s.positive === false
-                    ? "bg-red-50 text-red-600"
-                    : "bg-gray-100 text-gray-500"
-                }`}
-              >
-                {s.delta}
-              </span>
-            </div>
-            <p className="mt-3 text-2xl font-black text-gray-900">{s.value}</p>
-            <p className="text-sm text-gray-500 mt-0.5">{s.label}</p>
-          </div>
-        ))}
-      </div>
+      
 
       {/* Desa cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {desa.filter((d) => d.aktif).map((d) => (
-          <Link key={d.id} to={`/admin/desa/${d.id}/edit`} className="block group">
+          <Link key={d.id} to={`/desa/${d.id}/edit`} className="block group">
             <div className="bg-white rounded-xl overflow-hidden border border-gray-100 hover:shadow-md transition-all">
               <div className="relative h-20 overflow-hidden">
                 <img src={d.banner} alt={d.nama} className="w-full h-full object-cover" />
@@ -129,10 +74,10 @@ export function DashboardPage() {
       {/* Quick nav stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[
-          { label: "Berita", value: berita.filter(b => b.status === "published").length, icon: Newspaper, href: "/admin/berita", color: NAVY, bg: "#EFF6FF" },
-          { label: "Wisata", value: wisata.filter(w => w.aktif).length, icon: MapPin, href: "/admin/wisata", color: "#059669", bg: "#ECFDF5" },
-          { label: "Event", value: events.filter(e => e.aktif).length, icon: Calendar, href: "/admin/events", color: "#7C3AED", bg: "#F3E8FF" },
-          { label: "Pupuk", value: pupuk.filter((p: any) => p.aktif).length, icon: Leaf, href: "/admin/pupuk", color: "#D97706", bg: "#FFFBEB" },
+          { label: "Berita", value: berita.filter(b => b.status === "published").length, icon: Newspaper, href: "/berita", color: NAVY, bg: "#EFF6FF" },
+          { label: "Wisata", value: wisata.filter(w => w.aktif).length, icon: MapPin, href: "/wisata", color: "#059669", bg: "#ECFDF5" },
+          { label: "Event", value: events.filter(e => e.aktif).length, icon: Calendar, href: "/events", color: "#7C3AED", bg: "#F3E8FF" },
+          { label: "Pupuk", value: pupuk.filter((p: any) => p.aktif).length, icon: Leaf, href: "/pupuk", color: "#D97706", bg: "#FFFBEB" },
         ].map((s) => (
           <Link key={s.label} to={s.href} className="block">
             <div className="bg-white rounded-xl p-4 border border-gray-100 hover:shadow-md transition-all flex items-center gap-3">
@@ -156,7 +101,7 @@ export function DashboardPage() {
             <h3 className="font-bold text-gray-900 flex items-center gap-2 text-sm">
               <Newspaper size={14} style={{ color: NAVY }} /> Berita Terbaru
             </h3>
-            <Link to="/admin/berita" className="text-xs font-semibold hover:underline" style={{ color: NAVY }}>
+            <Link to="/berita" className="text-xs font-semibold hover:underline" style={{ color: NAVY }}>
               Lihat Semua →
             </Link>
           </div>
@@ -186,7 +131,7 @@ export function DashboardPage() {
             <h3 className="font-bold text-gray-900 flex items-center gap-2 text-sm">
               <Calendar size={14} style={{ color: "#7C3AED" }} /> Event Mendatang
             </h3>
-            <Link to="/admin/events" className="text-xs font-semibold hover:underline" style={{ color: NAVY }}>
+            <Link to="/events" className="text-xs font-semibold hover:underline" style={{ color: NAVY }}>
               Kelola Event →
             </Link>
           </div>
@@ -214,7 +159,7 @@ export function DashboardPage() {
           </div>
           {unreadPesan.length > 0 && (
             <Link
-              to="/admin/kontak"
+              to="/kontak"
               className="mt-4 flex items-center justify-between p-3 rounded-lg bg-red-50 border border-red-100"
             >
               <span className="text-xs font-semibold text-red-700">

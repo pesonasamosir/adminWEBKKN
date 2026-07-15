@@ -37,14 +37,14 @@ export function EventFormPage() {
       const newId = Math.max(...events.map(e => e.id), 0) + 1;
       setEvents([...events, { id: newId, ...form } as Event]);
     }
-    navigate("/admin/events");
+    navigate("/events");
   };
 
   return (
     <div className="space-y-5 max-w-2xl">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Link to="/admin/events"><button className="p-1.5 rounded-lg hover:bg-gray-100"><ChevronLeft size={18} /></button></Link>
+          <Link to="/events"><button className="p-1.5 rounded-lg hover:bg-gray-100"><ChevronLeft size={18} /></button></Link>
           <h1 className="text-gray-800">{isEdit ? "Edit Event" : "Tambah Event"}</h1>
         </div>
         <Button onClick={handleSave} style={{ backgroundColor: "#7C3AED" }} className="text-white gap-2"><Save size={14} /> Simpan</Button>

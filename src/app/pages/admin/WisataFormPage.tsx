@@ -50,14 +50,14 @@ export function WisataFormPage() {
       const newId = Math.max(...wisata.map(w => w.id), 0) + 1;
       setWisata([...wisata, { id: newId, slug: `${slug}-${newId}`, koordinat: { lat: 2.6833, lng: 98.8517 }, ...form } as Wisata]);
     }
-    navigate("/admin/wisata");
+    navigate("/wisata");
   };
 
   return (
     <div className="space-y-5 max-w-4xl">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Link to="/admin/wisata"><button className="p-1.5 rounded-lg hover:bg-gray-100"><ChevronLeft size={18} /></button></Link>
+          <Link to="/wisata"><button className="p-1.5 rounded-lg hover:bg-gray-100"><ChevronLeft size={18} /></button></Link>
           <h1 className="text-gray-800">{isEdit ? "Edit Wisata" : "Tambah Wisata"}</h1>
         </div>
         <Button onClick={handleSave} style={{ backgroundColor: "#2E8B57" }} className="text-white gap-2"><Save size={14} /> Simpan</Button>

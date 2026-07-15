@@ -20,7 +20,7 @@ export function PupukListPage() {
     <div className="space-y-5">
       <div className="flex items-center justify-between">
         <div><h1 className="text-gray-800">Informasi Pupuk</h1><p className="text-gray-500 text-sm">{pupuk.length} total pupuk</p></div>
-        <Link to="/admin/pupuk/create">
+        <Link to="/pupuk/create">
           <Button style={{ backgroundColor: "#2E8B57" }} className="text-white gap-2"><Plus size={16} /> Tambah Pupuk</Button>
         </Link>
       </div>
@@ -63,7 +63,7 @@ export function PupukListPage() {
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex gap-1">
-                      <Link to={`/admin/pupuk/${p.id}/edit`}><button className="p-1.5 rounded-lg hover:bg-green-50 text-gray-400 hover:text-green-600"><Edit size={14} /></button></Link>
+                      <Link to={`/pupuk/${p.id}/edit`}><button className="p-1.5 rounded-lg hover:bg-green-50 text-gray-400 hover:text-green-600"><Edit size={14} /></button></Link>
                       <button onClick={() => setDeleteId(p.id)} className="p-1.5 rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-600"><Trash2 size={14} /></button>
                     </div>
                   </td>

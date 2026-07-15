@@ -31,7 +31,7 @@ export function DesaListAdminPage() {
           <h1 className="text-gray-800">Manajemen Desa</h1>
           <p className="text-gray-500 text-sm mt-1">{desa.length} desa di Kecamatan Harian</p>
         </div>
-        <Link to="/admin/desa/create">
+        <Link to="/desa/create">
           <Button style={{ backgroundColor: "#1A56A0" }} className="text-white gap-2">
             <Plus size={16} /> Tambah Desa
           </Button>
@@ -61,7 +61,7 @@ export function DesaListAdminPage() {
                 <span>🏠 {d.rt} RT / {d.rw} RW</span>
               </div>
               <div className="flex items-center gap-2">
-                <Link to={`/admin/desa/${d.id}/edit`} className="flex-1">
+                <Link to={`/desa/${d.id}/edit`} className="flex-1">
                   <Button variant="outline" className="w-full gap-2 text-sm"><Edit size={14} /> Edit</Button>
                 </Link>
                 <Button
@@ -71,11 +71,7 @@ export function DesaListAdminPage() {
                 >
                   {d.aktif ? "Nonaktifkan" : "Aktifkan"}
                 </Button>
-                <Link to={`/desa/${d.slug}`} target="_blank">
-                  <Button variant="outline" className="gap-2 text-sm text-blue-600 border-blue-200 hover:bg-blue-50">
-                    <Eye size={14} />
-                  </Button>
-                </Link>
+                
               </div>
             </div>
           </div>
@@ -145,7 +141,7 @@ export function DesaFormAdminPage() {
 
     setSaved(true);
     setTimeout(() => {
-      navigate("/admin/desa");
+      navigate("/desa");
     }, 1000);
   };
 
@@ -153,7 +149,7 @@ export function DesaFormAdminPage() {
     <div className="space-y-5 max-w-3xl">
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-sm text-gray-500">
-        <Link to="/admin/desa" className="hover:text-blue-700">Manajemen Desa</Link>
+        <Link to="/desa" className="hover:text-blue-700">Manajemen Desa</Link>
         <ChevronRight size={14} />
         <span className="text-gray-800 font-medium">{isEdit ? "Edit Desa" : "Tambah Desa"}</span>
       </div>
@@ -262,7 +258,7 @@ export function DesaFormAdminPage() {
         <Button onClick={handleSave} style={{ backgroundColor: "#1A56A0" }} className="text-white gap-2">
           {saved ? <><Check size={14} /> Tersimpan!</> : <><Save size={14} /> Simpan Desa</>}
         </Button>
-        <Link to="/admin/desa">
+        <Link to="/desa">
           <Button variant="outline">Batal</Button>
         </Link>
       </div>
@@ -571,141 +567,5 @@ export function KontakAdminPage() {
   );
 }
 
-// ============================================================
-// Settings
-// ============================================================
-export function SettingsPage() {
-  const [form, setForm] = useState({
-    nama_website: SITE_CONFIG.nama,
-    tagline: SITE_CONFIG.tagline,
-    meta_desc: SITE_CONFIG.meta_desc,
-    ga_id: "G-XXXXXXXXXX",
-    fb_pixel: "",
-  });
-  const [saved, setSaved] = useState(false);
 
-  return (
-    <div className="space-y-5 max-w-2xl">
-      <div className="flex items-center justify-between">
-        <h1 className="text-gray-800">Pengaturan Website</h1>
-        <Button onClick={() => { setSaved(true); setTimeout(() => setSaved(false), 2000); }} style={{ backgroundColor: "#1A56A0" }} className="text-white gap-2">
-          {saved ? <><Check size={14} /> Tersimpan!</> : <><Save size={14} /> Simpan</>}
-        </Button>
-      </div>
-      <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 space-y-4">
-        <h3 className="font-semibold text-gray-800 mb-2">Identitas Website</h3>
-        <div><label className="text-sm text-gray-600 mb-1 block">Nama Website</label><Input value={form.nama_website} onChange={e => setForm({ ...form, nama_website: e.target.value })} /></div>
-        <div><label className="text-sm text-gray-600 mb-1 block">Tagline</label><Input value={form.tagline} onChange={e => setForm({ ...form, tagline: e.target.value })} /></div>
-        <div><label className="text-sm text-gray-600 mb-1 block">Meta Deskripsi (SEO)</label><Textarea value={form.meta_desc} onChange={e => setForm({ ...form, meta_desc: e.target.value })} rows={3} /></div>
-      </div>
-      <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 space-y-4">
-        <h3 className="font-semibold text-gray-800 mb-2">Integrasi & Analitik</h3>
-        <div><label className="text-sm text-gray-600 mb-1 block">Google Analytics ID</label><Input value={form.ga_id} onChange={e => setForm({ ...form, ga_id: e.target.value })} placeholder="G-XXXXXXXXXX" /></div>
-        <div><label className="text-sm text-gray-600 mb-1 block">Facebook Pixel ID</label><Input value={form.fb_pixel} onChange={e => setForm({ ...form, fb_pixel: e.target.value })} placeholder="Optional" /></div>
-      </div>
-    </div>
-  );
-}
 
-// ============================================================
-// Manajemen Admin
-// ============================================================
-export function UsersPage() {
-  const { users, setUsers, currentUser } = useApp();
-
-  return (
-    <div className="space-y-5">
-      <div className="flex items-center justify-between">
-        <h1 className="text-gray-800">Manajemen Admin</h1>
-        {currentUser?.role === "super_admin" && (
-          <Button style={{ backgroundColor: "#1A56A0" }} className="text-white gap-2"><Plus size={16} /> Tambah Admin</Button>
-        )}
-      </div>
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <table className="w-full text-sm">
-          <thead className="bg-gray-50 border-b border-gray-100">
-            <tr>
-              <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500">Admin</th>
-              <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500">Role</th>
-              <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500">Status</th>
-              <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500">Aksi</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-50">
-            {users.map(u => (
-              <tr key={u.id} className="hover:bg-gray-50">
-                <td className="px-4 py-3">
-                  <div className="flex items-center gap-3">
-                    <img src={u.avatar} alt={u.nama} className="w-9 h-9 rounded-full object-cover" />
-                    <div>
-                      <p className="font-medium text-gray-800 text-sm">{u.nama}</p>
-                      <p className="text-xs text-gray-400">{u.email}</p>
-                    </div>
-                  </div>
-                </td>
-                <td className="px-4 py-3">
-                  <span className={`text-xs px-2 py-0.5 rounded-full ${u.role === "super_admin" ? "bg-purple-100 text-purple-700" : "bg-blue-100 text-blue-700"}`}>
-                    {u.role === "super_admin" ? "Super Admin" : "Admin"}
-                  </span>
-                </td>
-                <td className="px-4 py-3"><span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">Aktif</span></td>
-                <td className="px-4 py-3">
-                  <div className="flex gap-1">
-                    <button className="p-1.5 rounded-lg hover:bg-blue-50 text-gray-400 hover:text-blue-600"><Edit size={14} /></button>
-                    {currentUser?.role === "super_admin" && u.id !== currentUser?.id && (
-                      <button className="p-1.5 rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-600"><Trash2 size={14} /></button>
-                    )}
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-}
-
-// ============================================================
-// Profil Saya
-// ============================================================
-export function ProfilSayaPage() {
-  const { currentUser } = useApp();
-  const [form, setForm] = useState({
-    nama: currentUser?.nama || "",
-    email: currentUser?.email || "",
-    avatar: currentUser?.avatar || "",
-    passwordLama: "",
-    passwordBaru: "",
-    passwordKonfirmasi: "",
-  });
-  const [saved, setSaved] = useState(false);
-
-  return (
-    <div className="space-y-5 max-w-2xl">
-      <h1 className="text-gray-800">Profil Saya</h1>
-      <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-        <div className="flex items-center gap-4 mb-6 pb-5 border-b border-gray-100">
-          <img src={form.avatar} alt={form.nama} className="w-16 h-16 rounded-full object-cover" />
-          <div>
-            <p className="font-bold text-gray-800">{form.nama}</p>
-            <p className="text-sm text-gray-500">{currentUser?.role === "super_admin" ? "Super Admin" : "Admin"}</p>
-          </div>
-        </div>
-        <div className="space-y-4">
-          <div><label className="text-sm text-gray-600 mb-1 block">Nama Lengkap</label><Input value={form.nama} onChange={e => setForm({ ...form, nama: e.target.value })} /></div>
-          <div><label className="text-sm text-gray-600 mb-1 block">Email</label><Input type="email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} /></div>
-          <div><label className="text-sm text-gray-600 mb-1 block">URL Avatar</label><Input value={form.avatar} onChange={e => setForm({ ...form, avatar: e.target.value })} /></div>
-          <hr className="border-gray-100" />
-          <h3 className="font-semibold text-gray-700">Ganti Password</h3>
-          <div><label className="text-sm text-gray-600 mb-1 block">Password Lama</label><Input type="password" value={form.passwordLama} onChange={e => setForm({ ...form, passwordLama: e.target.value })} /></div>
-          <div><label className="text-sm text-gray-600 mb-1 block">Password Baru</label><Input type="password" value={form.passwordBaru} onChange={e => setForm({ ...form, passwordBaru: e.target.value })} /></div>
-          <div><label className="text-sm text-gray-600 mb-1 block">Konfirmasi Password Baru</label><Input type="password" value={form.passwordKonfirmasi} onChange={e => setForm({ ...form, passwordKonfirmasi: e.target.value })} /></div>
-          <Button onClick={() => { setSaved(true); setTimeout(() => setSaved(false), 2000); }} style={{ backgroundColor: "#1A56A0" }} className="text-white gap-2">
-            {saved ? <><Check size={14} /> Tersimpan!</> : <><Save size={14} /> Simpan Perubahan</>}
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
-}

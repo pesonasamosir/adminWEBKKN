@@ -43,14 +43,14 @@ export function UMKMFormPage() {
       const newId = Math.max(...umkm.map(u => u.id), 0) + 1;
       setUmkm([...umkm, { id: newId, ...form } as UMKM]);
     }
-    navigate("/admin/umkm");
+    navigate("/umkm");
   };
 
   return (
     <div className="space-y-5 max-w-4xl">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Link to="/admin/umkm"><button className="p-1.5 rounded-lg hover:bg-gray-100"><ChevronLeft size={18} /></button></Link>
+          <Link to="/umkm"><button className="p-1.5 rounded-lg hover:bg-gray-100"><ChevronLeft size={18} /></button></Link>
           <h1 className="text-gray-800">{isEdit ? "Edit UMKM" : "Tambah UMKM"}</h1>
         </div>
         <Button onClick={handleSave} style={{ backgroundColor: "#E67E22" }} className="text-white gap-2"><Save size={14} /> Simpan</Button>

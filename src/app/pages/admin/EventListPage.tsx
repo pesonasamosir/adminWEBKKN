@@ -14,7 +14,7 @@ export function EventListPage() {
     <div className="space-y-5">
       <div className="flex items-center justify-between">
         <div><h1 className="text-gray-800">Event & Kalender</h1><p className="text-gray-500 text-sm">{events.length} total event</p></div>
-        <Link to="/admin/events/create">
+        <Link to="/events/create">
           <Button style={{ backgroundColor: "#7C3AED" }} className="text-white gap-2"><Plus size={16} /> Tambah Event</Button>
         </Link>
       </div>
@@ -54,7 +54,7 @@ export function EventListPage() {
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex gap-1">
-                      <Link to={`/admin/events/${e.id}/edit`}><button className="p-1.5 rounded-lg hover:bg-purple-50 text-gray-400 hover:text-purple-600"><Edit size={14} /></button></Link>
+                      <Link to={`/events/${e.id}/edit`}><button className="p-1.5 rounded-lg hover:bg-purple-50 text-gray-400 hover:text-purple-600"><Edit size={14} /></button></Link>
                       <button onClick={() => setDeleteId(e.id)} className="p-1.5 rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-600"><Trash2 size={14} /></button>
                     </div>
                   </td>
