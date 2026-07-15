@@ -1,27 +1,8 @@
 import { createBrowserRouter } from "react-router";
 import { RootLayout } from "./components/layout/RootLayout";
-import { PublicLayout } from "./components/layout/PublicLayout";
 import { AdminLayout } from "./components/layout/AdminLayout";
 
-// Public pages
-import { HomePage } from "./pages/public/HomePage";
-import { ProfilPage } from "./pages/public/ProfilPage";
-import { DesaListPage } from "./pages/public/DesaListPage";
-import { DesaDetailPage } from "./pages/public/DesaDetailPage";
-import { StrukturPage } from "./pages/public/StrukturPage";
-import { WisataPage } from "./pages/public/WisataPage";
-import { WisataDetailPage } from "./pages/public/WisataDetailPage";
-import { UMKMPage } from "./pages/public/UMKMPage";
-import { UMKMDetailPage } from "./pages/public/UMKMDetailPage";
-import { BudayaPage } from "./pages/public/BudayaPage";
-import { BeritaPage } from "./pages/public/BeritaPage";
-import { BeritaDetailPage } from "./pages/public/BeritaDetailPage";
-import { KalenderPage } from "./pages/public/KalenderPage";
-import { PupukPage } from "./pages/public/PupukPage";
-import { PupukDetailPage } from "./pages/public/PupukDetailPage";
-import { GaleriPage } from "./pages/public/GaleriPage";
-import { KontakPage } from "./pages/public/KontakPage";
-import { NotFoundPage } from "./pages/public/NotFoundPage";
+
 
 // Admin pages
 import { LoginPage } from "./pages/admin/LoginPage";
@@ -41,9 +22,6 @@ import {
   GaleriAdminPage,
   KategoriPage,
   KontakAdminPage,
-  SettingsPage,
-  UsersPage,
-  ProfilSayaPage,
   DesaListAdminPage,
   DesaFormAdminPage,
 } from "./pages/admin/MiscAdminPages";
@@ -55,13 +33,14 @@ export const router = createBrowserRouter([
     children: [
       // Admin Routes
       {
-        path: "/admin/login",
+        path: "/login",
         Component: LoginPage,
       },
       {
-        path: "/admin",
+        path: "/",
         Component: AdminLayout,
         children: [
+          { index: true, Component: DashboardPage },
           { path: "dashboard", Component: DashboardPage },
           { path: "desa", Component: DesaListAdminPage },
           { path: "desa/create", Component: DesaFormAdminPage },
@@ -84,35 +63,6 @@ export const router = createBrowserRouter([
           { path: "galeri", Component: GaleriAdminPage },
           { path: "kategori", Component: KategoriPage },
           { path: "kontak", Component: KontakAdminPage },
-          { path: "settings", Component: SettingsPage },
-          { path: "users", Component: UsersPage },
-          { path: "profil-saya", Component: ProfilSayaPage },
-        ],
-      },
-      // Public Routes
-      {
-        path: "/",
-        Component: PublicLayout,
-        children: [
-          { index: true, Component: HomePage },
-          { path: "profil-kecamatan", Component: ProfilPage },
-          { path: "profil", Component: ProfilPage },
-          { path: "profil/struktur", Component: StrukturPage },
-          { path: "desa", Component: DesaListPage },
-          { path: "desa/:slug", Component: DesaDetailPage },
-          { path: "wisata", Component: WisataPage },
-          { path: "wisata/:slug", Component: WisataDetailPage },
-          { path: "umkm", Component: UMKMPage },
-          { path: "umkm/:id", Component: UMKMDetailPage },
-          { path: "budaya", Component: BudayaPage },
-          { path: "berita", Component: BeritaPage },
-          { path: "berita/:slug", Component: BeritaDetailPage },
-          { path: "kalender", Component: KalenderPage },
-          { path: "pupuk", Component: PupukPage },
-          { path: "pupuk/:id", Component: PupukDetailPage },
-          { path: "galeri", Component: GaleriPage },
-          { path: "kontak", Component: KontakPage },
-          { path: "*", Component: NotFoundPage },
         ],
       },
     ],

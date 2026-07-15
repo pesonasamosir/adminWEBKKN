@@ -113,7 +113,7 @@ export function Footer() {
                 { label: "Kebijakan Privasi", href: "/kontak" },
                 { label: "Peta Situs", href: "/kontak" },
                 { label: "Hubungi Kami", href: "/kontak" },
-                { label: "Admin Panel", href: "/admin/login" },
+                { label: "Admin Panel", href: "/login" },
               ].map((l) => (
                 <li key={l.label}>
                   <Link

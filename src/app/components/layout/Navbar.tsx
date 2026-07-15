@@ -171,7 +171,7 @@ export function Navbar() {
 
             {/* Login button */}
             <Link
-              to="/admin/login"
+              to="/login"
               className="hidden md:inline-flex items-center text-sm font-semibold text-white px-4 py-1.5 rounded-lg transition-all hover:opacity-90"
               style={{ backgroundColor: NAVY }}
             >
@@ -264,7 +264,7 @@ export function Navbar() {
             {/* Mobile Login */}
             <li className="pt-2 border-t border-gray-100 mt-1">
               <Link
-                to="/admin/login"
+                to="/login"
                 className="flex items-center justify-center w-full py-2.5 rounded-lg text-white text-sm font-semibold transition-opacity hover:opacity-90"
                 style={{ backgroundColor: NAVY }}
               >
