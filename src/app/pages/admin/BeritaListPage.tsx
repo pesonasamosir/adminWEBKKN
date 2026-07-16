@@ -1,25 +1,49 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router";
-import { Plus, Search, Edit, Trash2, Eye, Filter } from "lucide-react";
+import { Plus, Search, Edit, Trash2 } from "lucide-react";
 import { Input } from "../../components/ui/input";
 import { Button } from "../../components/ui/button";
-import { useApp } from "../../context/AppContext";
+import beritaService, { type Berita } from "../../../services/berita.service";
 
 export function BeritaListPage() {
-  const { berita, setBerita } = useApp();
+  const [berita, setBerita] = useState<Berita[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [deleteId, setDeleteId] = useState<number | null>(null);
 
-  const filtered = berita.filter(b => {
+  useEffect(() => {
+    const loadBerita = async () => {
+      try {
+        setLoading(true);
+        const data = await beritaService.getAll();
+        setBerita(Array.isArray(data) ? data : []);
+        setError(null);
+      } catch (err) {
+        setError("Gagal memuat berita dari server.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadBerita();
+  }, []);
+
+  const filtered = berita.filter((b) => {
     const matchSearch = b.judul.toLowerCase().includes(search.toLowerCase());
     const matchStatus = statusFilter === "all" || b.status === statusFilter;
     return matchSearch && matchStatus;
   });
 
-  const handleDelete = (id: number) => {
-    setBerita(berita.filter(b => b.id !== id));
-    setDeleteId(null);
+  const handleDelete = async (id: number) => {
+    try {
+      await beritaService.remove(id);
+      setBerita((prev) => prev.filter((b) => b.id !== id));
+      setDeleteId(null);
+    } catch (err) {
+      setError("Gagal menghapus berita.");
+    }
   };
 
   return (
@@ -36,11 +60,14 @@ export function BeritaListPage() {
         </Link>
       </div>
 
-      {/* Filters */}
+      {error && (
+        <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>
+      )}
+
       <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
           <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-          <Input placeholder="Cari berita..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9 h-9" />
+          <Input placeholder="Cari berita..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9 h-9" />
         </div>
         <div className="flex gap-2">
           {[["all", "Semua"], ["published", "Tayang"], ["draft", "Draft"]].map(([val, label]) => (
@@ -53,7 +80,6 @@ export function BeritaListPage() {
         </div>
       </div>
 
-      {/* Table */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
@@ -68,7 +94,9 @@ export function BeritaListPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
-              {filtered.length === 0 ? (
+              {loading ? (
+                <tr><td colSpan={6} className="text-center py-8 text-gray-400">Memuat berita...</td></tr>
+              ) : filtered.length === 0 ? (
                 <tr><td colSpan={6} className="text-center py-8 text-gray-400">Tidak ada berita ditemukan</td></tr>
               ) : filtered.map((b, i) => (
                 <tr key={b.id} className="hover:bg-gray-50 transition-colors">
@@ -108,7 +136,6 @@ export function BeritaListPage() {
         </div>
       </div>
 
-      {/* Delete Confirm */}
       {deleteId && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-xl">

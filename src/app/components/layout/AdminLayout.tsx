@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Outlet, Link, useLocation, Navigate } from "react-router";
+import { Outlet, Link, useLocation } from "react-router";
 import {
   LayoutDashboard, Newspaper, MapPin, Store, Calendar, Leaf,
   Image, Users, MessageSquare, Settings, ChevronLeft, ChevronRight,
@@ -44,15 +44,11 @@ const MENU_GROUPS = [
 const ALL_MENU_ITEMS = MENU_GROUPS.flatMap((g) => g.items);
 
 export function AdminLayout() {
-  const { isAuthenticated, currentUser, logout, pesan } = useApp();
+  const { currentUser, logout, pesan } = useApp();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const location = useLocation();
-
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
 
   const isActive = (href: string) => location.pathname.startsWith(href);
   const unreadCount = pesan.filter((p: any) => !p.dibaca).length;

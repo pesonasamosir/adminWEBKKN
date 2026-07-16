@@ -1,14 +1,42 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router";
-import { Plus, Edit, Trash2, Calendar } from "lucide-react";
+import { Plus, Edit, Trash2 } from "lucide-react";
 import { Button } from "../../components/ui/button";
-import { useApp } from "../../context/AppContext";
+import eventService, { type Event } from "../../../services/event.service";
 
 export function EventListPage() {
-  const { events, setEvents } = useApp();
+  const [events, setEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [deleteId, setDeleteId] = useState<number | null>(null);
 
-  const handleDelete = (id: number) => { setEvents(events.filter(e => e.id !== id)); setDeleteId(null); };
+  useEffect(() => {
+    const loadEvents = async () => {
+      try {
+        setLoading(true);
+        const data = await eventService.getAll();
+        setEvents(Array.isArray(data) ? data : []);
+        setError(null);
+      } catch (err) {
+        setError("Gagal memuat event dari server.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadEvents();
+  }, []);
+
+  const handleDelete = async (id: number) => {
+    try {
+      await eventService.remove(id);
+      setEvents((prev) => prev.filter((e) => e.id !== id));
+      setDeleteId(null);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Gagal menghapus event.";
+      setError(message);
+    }
+  };
 
   return (
     <div className="space-y-5">
@@ -18,6 +46,10 @@ export function EventListPage() {
           <Button style={{ backgroundColor: "#7C3AED" }} className="text-white gap-2"><Plus size={16} /> Tambah Event</Button>
         </Link>
       </div>
+
+      {error && (
+        <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>
+      )}
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div className="overflow-x-auto">
@@ -33,7 +65,9 @@ export function EventListPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
-              {events.map(e => (
+              {loading ? (
+                <tr><td colSpan={6} className="text-center py-8 text-gray-400">Memuat event...</td></tr>
+              ) : events.map((e) => (
                 <tr key={e.id} className="hover:bg-gray-50">
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">

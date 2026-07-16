@@ -1,17 +1,45 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { Plus, Search, Edit, Trash2, CheckCircle2, AlertCircle } from "lucide-react";
 import { Input } from "../../components/ui/input";
 import { Button } from "../../components/ui/button";
-import { useApp } from "../../context/AppContext";
+import pupukService, { type PupukItem } from "../../../services/pupuk.service";
 
 export function PupukListPage() {
-  const { pupuk, setPupuk } = useApp();
+  const [pupuk, setPupuk] = useState<PupukItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [deleteId, setDeleteId] = useState<number | null>(null);
 
-  const filtered = pupuk.filter(p => p.nama.toLowerCase().includes(search.toLowerCase()) || p.merek.toLowerCase().includes(search.toLowerCase()));
-  const handleDelete = (id: number) => { setPupuk(pupuk.filter(p => p.id !== id)); setDeleteId(null); };
+  useEffect(() => {
+    const loadPupuk = async () => {
+      try {
+        setLoading(true);
+        const data = await pupukService.getAll();
+        setPupuk(Array.isArray(data) ? data : []);
+        setError(null);
+      } catch (err) {
+        setError("Gagal memuat data pupuk dari server.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadPupuk();
+  }, []);
+
+  const filtered = pupuk.filter((p) => p.nama.toLowerCase().includes(search.toLowerCase()) || p.merek.toLowerCase().includes(search.toLowerCase()));
+  const handleDelete = async (id: number) => {
+    try {
+      await pupukService.remove(id);
+      setPupuk((prev) => prev.filter((p) => p.id !== id));
+      setDeleteId(null);
+      setError(null);
+    } catch (err) {
+      setError("Gagal menghapus pupuk.");
+    }
+  };
 
   const statusColor = { tersedia: "#2E8B57", terbatas: "#E67E22", habis: "#DC2626" };
   const statusLabel = { tersedia: "Tersedia", terbatas: "Terbatas", habis: "Habis" };
@@ -24,10 +52,11 @@ export function PupukListPage() {
           <Button style={{ backgroundColor: "#2E8B57" }} className="text-white gap-2"><Plus size={16} /> Tambah Pupuk</Button>
         </Link>
       </div>
+      {error && <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>}
       <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
         <div className="relative max-w-sm">
           <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-          <Input placeholder="Cari pupuk..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9 h-9" />
+          <Input placeholder="Cari pupuk..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9 h-9" />
         </div>
       </div>
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -44,7 +73,9 @@ export function PupukListPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
-              {filtered.map(p => (
+              {loading ? (
+                <tr><td colSpan={6} className="px-4 py-8 text-center text-gray-400">Memuat data pupuk...</td></tr>
+              ) : filtered.map((p) => (
                 <tr key={p.id} className="hover:bg-gray-50">
                   <td className="px-4 py-3">
                     <p className="font-medium text-gray-800">{p.nama}</p>

@@ -5,7 +5,6 @@ import { AdminLayout } from "./components/layout/AdminLayout";
 
 
 // Admin pages
-import { LoginPage } from "./pages/admin/LoginPage";
 import { DashboardPage } from "./pages/admin/DashboardPage";
 import { BeritaListPage } from "./pages/admin/BeritaListPage";
 import { BeritaFormPage } from "./pages/admin/BeritaFormPage";
@@ -32,10 +31,6 @@ export const router = createBrowserRouter([
     Component: RootLayout,
     children: [
       // Admin Routes
-      {
-        path: "/login",
-        Component: LoginPage,
-      },
       {
         path: "/",
         Component: AdminLayout,

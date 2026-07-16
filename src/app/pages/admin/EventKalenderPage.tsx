@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight, Edit, Trash2 } from "lucide-react";
 import { Button } from "../../components/ui/button";
-import { useApp } from "../../context/AppContext";
-import { type Event } from "../../data/mockData";
+import eventService, { type Event } from "../../../services/event.service";
 
 const MONTHS = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 const DAYS = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
@@ -16,8 +15,10 @@ const COLOR_OPTIONS = [
 const KATEGORI_OPTIONS = ["Festival", "Budaya", "Pasar", "Olahraga", "Pemerintahan"];
 
 export function EventKalenderPage() {
-  const { events, setEvents, desa } = useApp();
   const today = new Date();
+  const [events, setEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
   const [deleteId, setDeleteId] = useState<number | null>(null);
@@ -32,6 +33,23 @@ export function EventKalenderPage() {
   const [lokasi, setLokasi] = useState("");
   const [deskripsi, setDeskripsi] = useState("");
   const [warna, setWarna] = useState(COLOR_OPTIONS[0].color);
+
+  useEffect(() => {
+    const loadEvents = async () => {
+      try {
+        setLoading(true);
+        const data = await eventService.getAll();
+        setEvents(Array.isArray(data) ? data : []);
+        setError(null);
+      } catch (err) {
+        setError("Gagal memuat event dari server.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadEvents();
+  }, []);
 
   const firstDay = new Date(currentYear, currentMonth, 1).getDay();
   const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
@@ -70,30 +88,39 @@ export function EventKalenderPage() {
     setEditingId(null);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!judul || !tanggalMulai || !tanggalSelesai || !lokasi) return;
 
-    const eventData: Event = {
-      id: editingId || Date.now(),
-      judul,
-      kategori,
-      village_id: desaId === "all" ? null : parseInt(desaId),
-      deskripsi,
-      tanggal_mulai: tanggalMulai,
-      tanggal_selesai: tanggalSelesai,
-      lokasi,
-      warna,
-      aktif: true,
-    };
+    try {
+      const payload = {
+        judul,
+        kategori,
+        village_id: desaId === "all" ? null : parseInt(desaId),
+        deskripsi,
+        tanggal_mulai: tanggalMulai,
+        tanggal_selesai: tanggalSelesai,
+        lokasi,
+        warna,
+        aktif: true,
+      };
 
-    if (editingId) {
-      setEvents(events.map(ev => ev.id === editingId ? eventData : ev));
-    } else {
-      setEvents([...events, eventData]);
+      if (editingId) {
+        const updated = await eventService.update(editingId, payload);
+        setEvents((prev) => prev.map((ev) => (ev.id === editingId ? updated : ev)));
+      } else {
+        console.log("Payload:", payload);
+        console.log("Judul:", judul);
+        const created = await eventService.create(payload);
+        setEvents((prev) => [...prev, created]);
+      }
+
+      handleReset();
+      setError(null);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Gagal menyimpan event ke server.";
+      setError(message);
     }
-
-    handleReset();
   };
 
   const handleEdit = (event: Event) => {
@@ -109,10 +136,17 @@ export function EventKalenderPage() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const handleDelete = (id: number) => {
-    setEvents(events.filter(e => e.id !== id));
-    setDeleteId(null);
-    if (editingId === id) handleReset();
+  const handleDelete = async (id: number) => {
+    try {
+      await eventService.remove(id);
+      setEvents((prev) => prev.filter((e) => e.id !== id));
+      setDeleteId(null);
+      if (editingId === id) handleReset();
+      setError(null);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Gagal menghapus event.";
+      setError(message);
+    }
   };
 
   return (
@@ -121,6 +155,10 @@ export function EventKalenderPage() {
         <h1 className="text-gray-800">Kalender Event</h1>
         <p className="text-gray-500 text-sm mt-1">Kelola dan jadwalkan berbagai kegiatan dan event Desa Toba Indah</p>
       </div>
+
+      {error && (
+        <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-[1fr,360px] gap-6">
         {/* Form Section */}
@@ -188,7 +226,7 @@ export function EventKalenderPage() {
                     type="button"
                     onClick={() => setWarna(c.color)}
                     className={`w-7 h-7 rounded-full transition-all ${warna === c.color ? "ring-2 ring-offset-2" : ""}`}
-                    style={{ backgroundColor: c.color, ringColor: c.color }}
+                    style={{ backgroundColor: c.color }}
                     title={c.label}
                   />
                 ))}
@@ -291,7 +329,9 @@ export function EventKalenderPage() {
           <button className="text-blue-600 text-sm hover:underline">Lihat Semua</button>
         </div>
 
-        {upcomingEvents.length === 0 ? (
+        {loading ? (
+          <div className="text-center py-12 text-gray-400 text-sm">Memuat event...</div>
+        ) : upcomingEvents.length === 0 ? (
           <div className="text-center py-12 text-gray-400 text-sm">Belum ada event mendatang</div>
         ) : (
           <div className="space-y-3">
