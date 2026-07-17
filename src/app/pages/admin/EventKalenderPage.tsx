@@ -326,7 +326,7 @@ export function EventKalenderPage() {
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <div className="flex items-center justify-between mb-5">
           <h2 className="font-semibold text-gray-800">📅 Daftar Event Mendatang</h2>
-          <button className="text-blue-600 text-sm hover:underline">Lihat Semua</button>
+          
         </div>
 
         {loading ? (

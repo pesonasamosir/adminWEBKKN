@@ -22,7 +22,7 @@ const MENU_GROUPS = [
     label: "Konten Publik",
     items: [
       { label: "Manajemen Desa", href: "/desa", icon: Home },
-      { label: "Berita", href: "/berita", icon: Newspaper },
+      { label: "Layanan Hukum", href: "/berita", icon: Newspaper },
       { label: "Wisata", href: "/wisata", icon: MapPin },
       { label: "UMKM", href: "/umkm", icon: Store },
       { label: "Event & Kalender", href: "/events", icon: Calendar },
@@ -35,8 +35,7 @@ const MENU_GROUPS = [
       { label: "Profil Kecamatan", href: "/profil", icon: Building2 },
       { label: "Struktur Organisasi", href: "/struktur", icon: Users },
       { label: "Galeri Foto", href: "/galeri", icon: Image },
-      { label: "Kategori", href: "/kategori", icon: Settings },
-      { label: "Pesan Kontak", href: "/kontak", icon: MessageSquare },
+      
     ],
   },
 ];

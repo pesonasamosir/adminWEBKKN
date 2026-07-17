@@ -6,8 +6,8 @@ import { AdminLayout } from "./components/layout/AdminLayout";
 
 // Admin pages
 import { DashboardPage } from "./pages/admin/DashboardPage";
-import { BeritaListPage } from "./pages/admin/BeritaListPage";
-import { BeritaFormPage } from "./pages/admin/BeritaFormPage";
+import { LayananHukumListPage } from "./pages/admin/layananHukumListPage";
+import { LayananHukumFormPage } from "./pages/admin/layananHukumFormPage";
 import { WisataListPage } from "./pages/admin/WisataListPage";
 import { WisataFormPage } from "./pages/admin/WisataFormPage";
 import { UMKMListPage } from "./pages/admin/UMKMListPage";
@@ -19,8 +19,6 @@ import {
   ProfilAdminPage,
   StrukturAdminPage,
   GaleriAdminPage,
-  KategoriPage,
-  KontakAdminPage,
   DesaListAdminPage,
   DesaFormAdminPage,
 } from "./pages/admin/MiscAdminPages";
@@ -40,9 +38,9 @@ export const router = createBrowserRouter([
           { path: "desa", Component: DesaListAdminPage },
           { path: "desa/create", Component: DesaFormAdminPage },
           { path: "desa/:id/edit", Component: DesaFormAdminPage },
-          { path: "berita", Component: BeritaListPage },
-          { path: "berita/create", Component: BeritaFormPage },
-          { path: "berita/:id/edit", Component: BeritaFormPage },
+          { path: "berita", Component: LayananHukumListPage },
+          { path: "berita/create", Component: LayananHukumFormPage },
+          { path: "berita/:id/edit", Component: LayananHukumFormPage },
           { path: "wisata", Component: WisataListPage },
           { path: "wisata/create", Component: WisataFormPage },
           { path: "wisata/:id/edit", Component: WisataFormPage },
@@ -56,8 +54,6 @@ export const router = createBrowserRouter([
           { path: "profil", Component: ProfilAdminPage },
           { path: "struktur", Component: StrukturAdminPage },
           { path: "galeri", Component: GaleriAdminPage },
-          { path: "kategori", Component: KategoriPage },
-          { path: "kontak", Component: KontakAdminPage },
         ],
       },
     ],

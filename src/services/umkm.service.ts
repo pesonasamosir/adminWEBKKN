@@ -6,7 +6,6 @@ export interface UmkmPayload {
   deskripsi: string;
   foto: string;
   alamat: string;
-  kontak: string;
   village_id: number | null;
   aktif: boolean;
 }

@@ -5,10 +5,10 @@ import { useApp } from "../../context/AppContext";
 import desaService from "../../../services/desa.service";
 import wisataService from "../../../services/wisata.service";
 import umkmService from "../../../services/umkm.service";
-import beritaService from "../../../services/berita.service";
+import layananHukumService from "../../../services/layananHukum.service";
 import eventService from "../../../services/event.service";
 import pupukService from "../../../services/pupuk.service";
-import kontakService from "../../../services/kontak.service";
+
 
 const NAVY = "#1B3A6B";
 
@@ -18,10 +18,9 @@ export function DashboardPage() {
     desa: [] as any[],
     wisata: [] as any[],
     umkm: [] as any[],
-    berita: [] as any[],
+    layananHukum: [] as any[],
     events: [] as any[],
     pupuk: [] as any[],
-    pesan: [] as any[],
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -30,24 +29,22 @@ export function DashboardPage() {
     const loadDashboard = async () => {
       try {
         setLoading(true);
-        const [desaData, wisataData, umkmData, beritaData, eventData, pupukData, pesanData] = await Promise.all([
+        const [desaData, wisataData, umkmData, layananHukumData, eventData, pupukData] = await Promise.all([
           desaService.getAll(),
           wisataService.getAll(),
           umkmService.getAll(),
-          beritaService.getAll(),
+          layananHukumService.getAll(),
           eventService.getAll(),
           pupukService.getAll(),
-          kontakService.getAll(),
         ]);
 
         setDashboardData({
           desa: desaData as any[],
           wisata: wisataData as any[],
           umkm: umkmData as any[],
-          berita: beritaData as any[],
+          layananHukum: layananHukumData as any[],
           events: eventData as any[],
           pupuk: pupukData as any[],
-          pesan: pesanData as any[],
         });
         setError(null);
       } catch (err) {
@@ -60,10 +57,9 @@ export function DashboardPage() {
     loadDashboard();
   }, []);
 
-  const { desa, wisata, umkm, berita, events, pupuk, pesan } = dashboardData;
-  const latestBerita = berita.filter((b: any) => b.status === "published").slice(0, 3);
+  const { desa, wisata, umkm, layananHukum, events, pupuk } = dashboardData;
+  const latestLayanan = layananHukum.filter((item: any) => item.aktif !== false).slice(0, 3);
   const upcomingEvents = events.filter((e: any) => e.aktif).slice(0, 3);
-  const unreadPesan = pesan.filter((p: any) => !p.dibaca);
 
   return (
     <div className="space-y-6">
@@ -89,7 +85,7 @@ export function DashboardPage() {
             className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-white text-sm font-medium hover:opacity-90 transition-opacity"
             style={{ backgroundColor: NAVY }}
           >
-            <Newspaper size={14} /> Tambah Berita
+            <Newspaper size={14} /> Tambah Layanan
           </Link>
         </div>
       </div>
@@ -120,7 +116,7 @@ export function DashboardPage() {
                   <div className="px-4 py-2.5 flex items-center gap-4 text-xs text-gray-500">
                     <span>{wisata.filter((w: any) => w.village_id === d.id).length} Wisata</span>
                     <span>{umkm.filter((u: any) => u.village_id === d.id).length} UMKM</span>
-                    <span>{berita.filter((b: any) => b.village_id === d.id).length} Berita</span>
+                    <span>{layananHukum.filter((item: any) => item.aktif !== false).length} Layanan</span>
                     <span className="ml-auto bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">Aktif</span>
                   </div>
                 </div>
@@ -130,7 +126,7 @@ export function DashboardPage() {
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {[
-              { label: "Berita", value: berita.filter((b: any) => b.status === "published").length, icon: Newspaper, href: "/berita", color: NAVY, bg: "#EFF6FF" },
+              { label: "Layanan", value: layananHukum.filter((item: any) => item.aktif !== false).length, icon: Newspaper, href: "/berita", color: NAVY, bg: "#EFF6FF" },
               { label: "Wisata", value: wisata.filter((w: any) => w.aktif).length, icon: MapPin, href: "/wisata", color: "#059669", bg: "#ECFDF5" },
               { label: "Event", value: events.filter((e: any) => e.aktif).length, icon: Calendar, href: "/events", color: "#7C3AED", bg: "#F3E8FF" },
               { label: "Pupuk", value: pupuk.filter((p: any) => p.aktif).length, icon: Leaf, href: "/pupuk", color: "#D97706", bg: "#FFFBEB" },
@@ -153,26 +149,24 @@ export function DashboardPage() {
             <div className="lg:col-span-3 bg-white rounded-xl p-5 border border-gray-100 shadow-sm">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-bold text-gray-900 flex items-center gap-2 text-sm">
-                  <Newspaper size={14} style={{ color: NAVY }} /> Berita Terbaru
+                  <Newspaper size={14} style={{ color: NAVY }} /> Layanan Hukum Tersedia
                 </h3>
                 <Link to="/berita" className="text-xs font-semibold hover:underline" style={{ color: NAVY }}>
                   Lihat Semua →
                 </Link>
               </div>
               <div className="space-y-3">
-                {latestBerita.map((b: any) => (
-                  <div key={b.id} className="flex items-center gap-3">
-                    <img src={b.foto} alt={b.judul} className="w-12 h-12 rounded-lg object-cover shrink-0" />
+                {latestLayanan.map((item: any) => (
+                  <div key={item.id} className="flex items-center gap-3">
+                    <img src={item.foto} alt={item.nama_firma} className="w-12 h-12 rounded-lg object-cover shrink-0" />
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-gray-800 truncate">{b.judul}</p>
+                      <p className="text-sm font-semibold text-gray-800 truncate">{item.nama_firma}</p>
                       <p className="text-xs text-gray-400 mt-0.5">
-                        <span className="font-medium" style={{ color: NAVY }}>{b.kategori}</span>
-                        {" · "}
-                        {new Date(b.tanggal).toLocaleDateString("id-ID", { day: "numeric", month: "short" })}
+                        <span className="font-medium" style={{ color: NAVY }}>{item.bidang_layanan.join(", ")}</span>
                       </p>
                     </div>
                     <span className="text-xs px-2 py-0.5 rounded-full bg-green-100 text-green-700 shrink-0 font-medium">
-                      Terbit
+                      Aktif
                     </span>
                   </div>
                 ))}
@@ -210,17 +204,7 @@ export function DashboardPage() {
                   );
                 })}
               </div>
-              {unreadPesan.length > 0 && (
-                <Link
-                  to="/kontak"
-                  className="mt-4 flex items-center justify-between p-3 rounded-lg bg-red-50 border border-red-100"
-                >
-                  <span className="text-xs font-semibold text-red-700">
-                    {unreadPesan.length} Pesan Belum Dibaca
-                  </span>
-                  <span className="text-xs text-red-500">Lihat →</span>
-                </Link>
-              )}
+              
             </div>
           </div>
         </>
